@@ -1,5 +1,6 @@
 const auth = require("../controllers/auth.ts");
 
+const server = require("../server.json");
 const express = require("express");
 const mariadb = require("mariadb");
 const setConn = async () => {
@@ -7,10 +8,10 @@ const setConn = async () => {
 
   try {
     conn = await mariadb.createConnection({
-      host: "localhost",
-      user: "areco",
-      password: "senha1234",
-      database: "teste",
+      host: server.host,
+      user: server.user,
+      password: server.password,
+      database: server.database,
       connectionLimit: 5,
     });
   } finally {
