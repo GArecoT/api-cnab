@@ -32,19 +32,24 @@ async function adicionarEmpresa(req) {
       !req.body.data.num_conta || !req.body.data.num_convenio ||
       !req.body.data.cdg_documento ||
       !req.body.data.num_doc || !req.body.data.nome_empresa ||
-      !req.body.data.cdg_operacao ||
-      !req.body.data.cdg_servico || !req.body.data.cdg_lancamento ||
       !req.body.data.cep ||
       !req.body.data.logradouro || !req.body.data.endereco_num ||
-      !req.body.data.complemento ||
       !req.body.data.estado || !req.body.data.cidade ||
       !req.body.data.num_doc_empresa ||
       !req.body.data.id
     ) {
       return { err: "Faltando dados" };
     } else {
+      const response = await conn.query(
+        `SELECT * FROM cnab.empresas WHERE id = "${req.body.data.id}";`,
+      );
+      if (response.length > 0) {
+        await conn.query(
+          `delete FROM cnab.empresas WHERE id = "${req.body.data.id}";`,
+        );
+      }
       const post = await conn.query(
-        `insert into cnab.empresas values("${req.body.data.cdg_banco}","${req.body.data.num_agencia}","${req.body.data.num_conta}","${req.body.data.num_convenio}","${req.body.data.cdg_documento}","${req.body.data.num_doc}","${req.body.data.nome_empresa}","${req.body.data.cep}","${req.body.data.logradouro}","${req.body.data.endereco_num}","${req.body.data.complemento}","${req.body.data.estado}","${req.body.data.cidade}","${req.body.data.num_doc_empresa}","${req.body.data.id}","${req.body.data.cdg_lancamento}","${req.body.data.cdg_servico}","${req.body.data.cdg_operacao}")`,
+        `insert into cnab.empresas values("${req.body.data.cdg_banco}","${req.body.data.num_agencia}","${req.body.data.num_conta}","${req.body.data.num_convenio}","${req.body.data.cdg_documento}","${req.body.data.num_doc}","${req.body.data.nome_empresa}","${req.body.data.cep}","${req.body.data.logradouro}","${req.body.data.endereco_num}","${req.body.data?.complemento}","${req.body.data.estado}","${req.body.data.cidade}","${req.body.data.num_doc_empresa}","${req.body.data.id}","${req.body.data?.cdg_lancamento}","${req.body.data?.cdg_servico}","${req.body.data?.cdg_operacao}")`,
       );
       return { msg: "Empresa cadastrada com Sucesso" };
     }

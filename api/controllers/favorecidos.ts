@@ -38,6 +38,14 @@ async function adicionarFavorecido(req) {
     ) {
       return { err: "Faltando dados" };
     } else {
+      const response = await conn.query(
+        `SELECT * FROM cnab.favorecidos WHERE id = "${req.body.data.id}";`,
+      );
+      if (response.length > 0) {
+        await conn.query(
+          `delete FROM cnab.favorecidos WHERE id = "${req.body.data.id}";`,
+        );
+      }
       const post = await conn.query(
         `insert into cnab.favorecidos values("${req.body.data.id}","${req.body.data.num_doc_favorecido}","${req.body.data.nome_favorecido}","${req.body.data.cdg_banco_favorecido}","${req.body.data.num_conta_favorecido}","${req.body.data.num_agencia_favorecido}")`,
       );
